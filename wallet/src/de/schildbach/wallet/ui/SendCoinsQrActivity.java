@@ -17,17 +17,21 @@
 
 package de.schildbach.wallet.ui;
 
+import javax.annotation.Nonnull;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.Transaction;
 
 import de.schildbach.wallet.data.PaymentIntent;
 import de.schildbach.wallet.ui.InputParser.StringInputParser;
 import de.schildbach.wallet.ui.send.SendCoinsActivity;
+import de.schildbach.wallet.ui.send.SweepWalletActivity;
 
 /**
  * @author Andreas Schildbach
@@ -54,7 +58,7 @@ public final class SendCoinsQrActivity extends AbstractOnDemandServiceActivity
 			new StringInputParser(input)
 			{
 				@Override
-				protected void handlePaymentIntent(final PaymentIntent paymentIntent)
+				protected void handlePaymentIntent(@Nonnull final PaymentIntent paymentIntent)
 				{
 					SendCoinsActivity.start(SendCoinsQrActivity.this, paymentIntent);
 
@@ -62,7 +66,15 @@ public final class SendCoinsQrActivity extends AbstractOnDemandServiceActivity
 				}
 
 				@Override
-				protected void handleDirectTransaction(final Transaction transaction)
+				protected void handlePrivateKey(@Nonnull final ECKey key)
+				{
+					SweepWalletActivity.start(SendCoinsQrActivity.this, key);
+
+					SendCoinsQrActivity.this.finish();
+				}
+
+				@Override
+				protected void handleDirectTransaction(@Nonnull final Transaction transaction)
 				{
 					processDirectTransaction(transaction);
 

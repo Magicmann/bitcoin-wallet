@@ -30,7 +30,7 @@ import de.schildbach.wallet.WalletApplication;
  */
 public abstract class AbstractOnDemandServiceActivity extends AbstractWalletActivity
 {
-	protected void processDirectTransaction(@Nonnull final Transaction tx)
+	public void processDirectTransaction(@Nonnull final Transaction tx)
 	{
 		final Wallet wallet = getWalletApplication().getWallet();
 
